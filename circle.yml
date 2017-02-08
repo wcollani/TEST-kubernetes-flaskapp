@@ -1,0 +1,20 @@
+machine:
+  services:
+    - docker
+
+dependencies:
+  cache_directories:
+    - "~/docker"
+
+  pre: 
+    - if [[ -e ~/docker/image.tar ]]; then docker load -i ~/docker/image.tar; fi
+
+  override:
+    - make cont-build
+
+  post:
+    - mkdir -p ~/docker; docker save wcollani/flaskapp > ~/docker/image.tar
+
+test:
+  override:
+    - make cont-test
